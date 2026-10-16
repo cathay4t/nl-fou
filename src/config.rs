@@ -21,7 +21,7 @@ pub struct FouConfig {
     pub port: Option<u16>,
     /// The address family, IPv4 by default.
     pub family: Option<FouAddressFamily>,
-    /// The encapsulation type, `FOU_ENCAP_DIRECT` by default.
+    /// The encapsulation type, [FouEncap::Direct] by default.
     pub encap: Option<FouEncap>,
     /// The L4 protocol to receive, e.g. 17 for UDP.
     pub ipproto: Option<u8>,
@@ -31,7 +31,7 @@ pub struct FouConfig {
     pub peer: Option<IpAddr>,
     /// The peer port, must be set together with [FouConfig::peer].
     pub peer_port: Option<u16>,
-    /// Receive checksum not partial, `FOU_ATTR_REMCSUM_NOPARTIAL`.
+    /// Receive checksum not partial.
     pub remcsum_nopartial: bool,
     /// The index of the interface the listener is bound to.
     pub ifindex: Option<i32>,
