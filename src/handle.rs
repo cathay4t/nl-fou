@@ -3,10 +3,10 @@
 use std::{io, sync::Arc};
 
 use futures_util::{Stream, StreamExt, future::ready};
-use genetlink::GenetlinkHandle;
+use genetlink::{GenetlinkError, GenetlinkHandle};
 use netlink_packet_core::{
-    DecodeError, ErrorMessage, NLM_F_ACK, NLM_F_DUMP, NLM_F_REQUEST,
-    NetlinkMessage, NetlinkPayload,
+    ErrorMessage, NLM_F_ACK, NLM_F_DUMP, NLM_F_REQUEST, NetlinkMessage,
+    NetlinkPayload,
 };
 use netlink_packet_fou::{FouCmd, FouMessage};
 use netlink_packet_generic::GenlMessage;
@@ -98,7 +98,7 @@ impl FouHandle {
 fn parse_nl_msg_stream(
     nl_msg: NetlinkMessage<GenlMessage<FouMessage>>,
     stream: impl Stream<
-        Item = Result<NetlinkMessage<GenlMessage<FouMessage>>, DecodeError>,
+        Item = Result<NetlinkMessage<GenlMessage<FouMessage>>, GenetlinkError>,
     >,
 ) -> impl Stream<Item = Result<FouMessage, FouError>> {
     let nl_msg = Arc::new(nl_msg);
@@ -235,7 +235,7 @@ mod tests {
     async fn parse_replies(
         replies: Vec<NetlinkMsg>,
     ) -> Vec<Result<FouMessage, FouError>> {
-        let replies: Vec<Result<NetlinkMsg, DecodeError>> =
+        let replies: Vec<Result<NetlinkMsg, GenetlinkError>> =
             replies.into_iter().map(Ok).collect();
         parse_nl_msg_stream(inner_message(), stream::iter(replies))
             .collect()
